@@ -10,23 +10,33 @@ import XCTest
 import ComposableArchitecture
 
 class CounterDemoTests: XCTestCase {
-  func testCounterIncrement() throws {
-    let store = TestStore(
+  
+  var store: TestStore<Counter, Counter, CounterAction, CounterAction, CounterEnvironment>!
+  
+  override func setUp() {
+    store = TestStore(
       initialState: Counter(count: Int.random(in: -100...100)),
       reducer: counterReducer,
       environment: CounterEnvironment()
     )
+  }
+  
+  func testCounterIncrement() throws {
     store.send(.increment) { state in
       state.count += 1
     }
   }
   
   func testCounterDecrement() throws {
-    
+    store.send(.decrement) { state in
+      state.count -= 1
+    }
   }
   
   func testReset() throws {
-    
+    store.send(.reset) { state in
+      state.count = 0
+    }
   }
 }
 
