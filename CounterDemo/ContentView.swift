@@ -10,6 +10,7 @@ import ComposableArchitecture
 
 struct Counter: Equatable {
   var count: Int = 0
+  let secret = Int.random(in: -100 ... 100)
 }
 
 // View Model
@@ -17,6 +18,16 @@ extension Counter {
   var countString: String {
     get { String(count) }
     set { count = Int(newValue) ?? count }
+  }
+  
+  enum CheckResult {
+    case lower, equal, higher
+  }
+  
+  var checkResult: CheckResult {
+    if count < secret { return .lower }
+    if count > secret { return .higher }
+    return .equal
   }
 }
 
@@ -52,6 +63,7 @@ struct CounterView: View {
   var body: some View {
     WithViewStore(store) { viewStore in
       VStack {
+        checkLabel(with: viewStore.checkResult)
         HStack {
           Button("-") { viewStore.send(.decrement) }
           TextField(
@@ -68,6 +80,20 @@ struct CounterView: View {
         }
         Button("Reset") { viewStore.send(.reset) }
       }
+    }
+  }
+  
+  func checkLabel(with checkResult: Counter.CheckResult) -> some View {
+    switch checkResult {
+    case .lower:
+      return Label("Lower", systemImage: "lessthan.circle")
+        .foregroundColor(.red)
+    case .higher:
+      return Label("Higer", systemImage: "greaterthan.circle")
+        .foregroundColor(.red)
+    case .equal:
+      return Label("Correct", systemImage: "checkmark.circle")
+        .foregroundColor(.green)
     }
   }
   
