@@ -12,9 +12,18 @@ struct Counter: Equatable {
   var count: Int = 0
 }
 
+// View Model
+extension Counter {
+  var countString: String {
+    get { String(count) }
+    set { count = Int(newValue) ?? count }
+  }
+}
+
 enum CounterAction {
   case increment
   case decrement
+  case setCount(String)
   case reset
 }
 
@@ -29,6 +38,9 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
   case .decrement:
     state.count -= 1
     return .none
+  case .setCount(let text):
+    state.countString = text
+    return .none
   case .reset:
     state.count = 0
     return .none
@@ -42,7 +54,15 @@ struct CounterView: View {
       VStack {
         HStack {
           Button("-") { viewStore.send(.decrement) }
-          Text("\(viewStore.count)")
+          TextField(
+            viewStore.countString,
+            text: viewStore.binding(
+              get: \.countString,
+              send: CounterAction.setCount
+            )
+          )
+            .frame(width: 40)
+            .multilineTextAlignment(.center)
             .foregroundColor(colorOfCount(viewStore.count))
           Button("+") { viewStore.send(.increment) }
         }
@@ -67,3 +87,4 @@ struct ContentView_Previews: PreviewProvider {
       )
     }
 }
+

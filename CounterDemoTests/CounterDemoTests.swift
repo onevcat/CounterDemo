@@ -38,6 +38,12 @@ class CounterDemoTests: XCTestCase {
       state.count = 0
     }
   }
+  
+  func testSetCount() {
+    store.send(.setCount("100")) { state in
+      state.count = 100
+    }
+  }
 }
 
 
