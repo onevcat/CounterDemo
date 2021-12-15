@@ -35,7 +35,7 @@ enum CounterAction {
   case increment
   case decrement
   case setCount(String)
-  case newGame
+  case playNext
 }
 
 struct CounterEnvironment { }
@@ -52,7 +52,7 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
   case .setCount(let text):
     state.countString = text
     return .none
-  case .newGame:
+  case .playNext:
     state.count = 0
     state.secret = Int.random(in: -100 ... 100)
     return .none
@@ -79,7 +79,7 @@ struct CounterView: View {
             .foregroundColor(colorOfCount(viewStore.count))
           Button("+") { viewStore.send(.increment) }
         }
-        Button("New Game") { viewStore.send(.newGame) }
+        Button("Next") { viewStore.send(.playNext) }
       }
     }
   }
