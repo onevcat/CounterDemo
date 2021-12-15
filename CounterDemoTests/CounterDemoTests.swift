@@ -34,7 +34,7 @@ class CounterDemoTests: XCTestCase {
   }
   
   func testReset() throws {
-    store.send(.reset) { state in
+    store.send(.newGame) { state in
       state.count = 0
     }
   }

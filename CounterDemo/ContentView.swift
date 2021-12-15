@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 struct Counter: Equatable {
   var count: Int = 0
-  let secret = Int.random(in: -100 ... 100)
+  var secret = Int.random(in: -100 ... 100)
 }
 
 // View Model
@@ -35,7 +35,7 @@ enum CounterAction {
   case increment
   case decrement
   case setCount(String)
-  case reset
+  case newGame
 }
 
 struct CounterEnvironment { }
@@ -52,8 +52,9 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
   case .setCount(let text):
     state.countString = text
     return .none
-  case .reset:
+  case .newGame:
     state.count = 0
+    state.secret = Int.random(in: -100 ... 100)
     return .none
   }
 }.debug()
@@ -78,7 +79,7 @@ struct CounterView: View {
             .foregroundColor(colorOfCount(viewStore.count))
           Button("+") { viewStore.send(.increment) }
         }
-        Button("Reset") { viewStore.send(.reset) }
+        Button("Reset") { viewStore.send(.newGame) }
       }
     }
   }
@@ -89,7 +90,7 @@ struct CounterView: View {
       return Label("Lower", systemImage: "lessthan.circle")
         .foregroundColor(.red)
     case .higher:
-      return Label("Higer", systemImage: "greaterthan.circle")
+      return Label("Higher", systemImage: "greaterthan.circle")
         .foregroundColor(.red)
     case .equal:
       return Label("Correct", systemImage: "checkmark.circle")
