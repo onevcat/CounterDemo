@@ -79,7 +79,7 @@ struct CounterView: View {
             .foregroundColor(colorOfCount(viewStore.count))
           Button("+") { viewStore.send(.increment) }
         }
-        Button("Reset") { viewStore.send(.newGame) }
+        Button("New Game") { viewStore.send(.newGame) }
       }
     }
   }
