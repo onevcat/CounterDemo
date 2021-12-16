@@ -8,9 +8,11 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct Counter: Equatable {
+struct Counter: Equatable, Identifiable {
   var count: Int = 0
   var secret = Int.random(in: -100 ... 100)
+  
+  var id: UUID = UUID()
 }
 
 // View Model
@@ -18,6 +20,11 @@ extension Counter {
   var countString: String {
     get { String(count) }
     set { count = Int(newValue) ?? count }
+  }
+  
+  var countFloat: Float {
+    get { Float(count) }
+    set { count = Int(newValue) }
   }
   
   enum CheckResult {
@@ -35,14 +42,17 @@ enum CounterAction {
   case increment
   case decrement
   case setCount(String)
+  case slidingCount(Float)
   case playNext
 }
 
 struct CounterEnvironment {
   var generateRandom: (ClosedRange<Int>) -> Int
+  var uuid: () -> UUID
   
   static let live = CounterEnvironment(
-    generateRandom: Int.random
+    generateRandom: Int.random,
+    uuid: UUID.init
   )
 }
 
@@ -58,9 +68,13 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
   case .setCount(let text):
     state.countString = text
     return .none
+  case .slidingCount(let value):
+    state.countFloat = value
+    return .none
   case .playNext:
     state.count = 0
     state.secret = environment.generateRandom(-100 ... 100)
+    state.id = environment.uuid()
     return .none
   }
 }.debug()
@@ -85,8 +99,9 @@ struct CounterView: View {
             .foregroundColor(colorOfCount(viewStore.count))
           Button("+") { viewStore.send(.increment) }
         }
+        Slider(value: viewStore.binding(get: \.countFloat, send: CounterAction.slidingCount), in: -100...100)
         Button("Next") { viewStore.send(.playNext) }
-      }
+      }.frame(width: 150)
     }
   }
   

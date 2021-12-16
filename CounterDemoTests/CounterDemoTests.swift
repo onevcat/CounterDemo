@@ -35,7 +35,7 @@ class CounterDemoTests: XCTestCase {
   
   func testReset() throws {
     store.send(.playNext) { state in
-      state = Counter(count: 0, secret: 5)
+      state = Counter(count: 0, secret: 5, id: .dummy)
     }
   }
   
@@ -44,8 +44,21 @@ class CounterDemoTests: XCTestCase {
       state.count = 100
     }
   }
+  
+  func testSliderSetCount() {
+    store.send(.slidingCount(72.3)) { state in
+      state.count = 72
+    }
+  }
+}
+
+extension UUID {
+  static let dummy = UUID(uuidString: "ABABABAB-CDCD-EFEF-ABAB-CDCDCDCDCDCD")!
 }
 
 extension CounterEnvironment {
-  static let test = CounterEnvironment(generateRandom: { _ in 5 })
+  static let test = CounterEnvironment(
+    generateRandom: { _ in 5 },
+    uuid: { .dummy }
+  )
 }
