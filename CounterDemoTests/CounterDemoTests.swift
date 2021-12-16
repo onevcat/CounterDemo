@@ -23,13 +23,13 @@ class CounterDemoTests: XCTestCase {
   
   func testCounterIncrement() throws {
     store.send(.increment) { state in
-      state = Counter(count: state.count + 1, secret: state.secret)
+      state.count += 1
     }
   }
   
   func testCounterDecrement() throws {
     store.send(.decrement) { state in
-      state = Counter(count: state.count - 1, secret: state.secret)
+      state.count -= 1
     }
   }
   
@@ -41,7 +41,7 @@ class CounterDemoTests: XCTestCase {
   
   func testSetCount() {
     store.send(.setCount("100")) { state in
-      state = Counter(count: 100, secret: state.secret)
+      state.count = 100
     }
   }
 }
