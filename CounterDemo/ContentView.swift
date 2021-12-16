@@ -38,10 +38,16 @@ enum CounterAction {
   case playNext
 }
 
-struct CounterEnvironment { }
+struct CounterEnvironment {
+  var generateRandom: (ClosedRange<Int>) -> Int
+  
+  static let live = CounterEnvironment(
+    generateRandom: Int.random
+  )
+}
 
 let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
-  state, action, _ in
+  state, action, environment in
   switch action {
   case .increment:
     state.count += 1
@@ -54,7 +60,7 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
     return .none
   case .playNext:
     state.count = 0
-    state.secret = Int.random(in: -100 ... 100)
+    state.secret = environment.generateRandom(-100 ... 100)
     return .none
   }
 }.debug()
@@ -110,7 +116,7 @@ struct ContentView_Previews: PreviewProvider {
         store: Store(
           initialState: Counter(),
           reducer: counterReducer,
-          environment: CounterEnvironment())
+          environment: .live)
       )
     }
 }

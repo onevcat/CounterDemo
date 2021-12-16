@@ -17,33 +17,35 @@ class CounterDemoTests: XCTestCase {
     store = TestStore(
       initialState: Counter(count: Int.random(in: -100...100)),
       reducer: counterReducer,
-      environment: CounterEnvironment()
+      environment: .test
     )
   }
   
   func testCounterIncrement() throws {
     store.send(.increment) { state in
-      state.count += 1
+      state = Counter(count: state.count + 1, secret: state.secret)
     }
   }
   
   func testCounterDecrement() throws {
     store.send(.decrement) { state in
-      state.count -= 1
+      state = Counter(count: state.count - 1, secret: state.secret)
     }
   }
   
   func testReset() throws {
     store.send(.playNext) { state in
-      state.count = 0
+      state = Counter(count: 0, secret: 5)
     }
   }
   
   func testSetCount() {
     store.send(.setCount("100")) { state in
-      state.count = 100
+      state = Counter(count: 100, secret: state.secret)
     }
   }
 }
 
-
+extension CounterEnvironment {
+  static let test = CounterEnvironment(generateRandom: { _ in 5 })
+}
