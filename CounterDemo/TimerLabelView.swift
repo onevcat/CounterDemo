@@ -47,13 +47,9 @@ let timerReducer = Reducer<TimerState, TimerAction, TimerEnvironment> {
       tolerance: .zero,
       on: environment.mainQueue
     ).map { time -> TimerAction in
-      print(time)
       return TimerAction.timeUpdated
     }
   case .timeUpdated:
-    guard let started = state.started else {
-      return .none
-    }
     state.duration += 0.01
     return .none
   case .stop:
@@ -75,13 +71,12 @@ struct TimerLabelView: View {
 }
 
 struct TimerLabelView_Previews: PreviewProvider {
-  static let store1 = Store(initialState: .init(), reducer: timerReducer, environment: .live)
-  static let store2 = Store(initialState: .init(), reducer: timerReducer, environment: .live)
+  static let store = Store(initialState: .init(), reducer: timerReducer, environment: .live)
   static var previews: some View {
     VStack {
-      WithViewStore(store1) { viewStore in
+      WithViewStore(store) { viewStore in
         VStack {
-          TimerLabelView(store: store1)
+          TimerLabelView(store: store)
           HStack {
             Button("Start") { viewStore.send(.start) }
             Button("Stop") { viewStore.send(.stop) }
