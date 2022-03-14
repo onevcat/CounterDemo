@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CounterView.swift
 //  CounterDemo
 //
 //  Created by Wang Wei on 2021/12/08.
@@ -125,7 +125,7 @@ struct CounterView: View {
   }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct CounterView_Previews: PreviewProvider {
     static var previews: some View {
       CounterView(
         store: Store(
