@@ -77,7 +77,7 @@ let counterReducer = Reducer<Counter, CounterAction, CounterEnvironment> {
     state.id = environment.uuid()
     return .none
   }
-}.debug()
+}
 
 struct CounterView: View {
   let store: Store<Counter, CounterAction>
