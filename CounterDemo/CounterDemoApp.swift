@@ -16,7 +16,7 @@ struct CounterDemoApp: App {
         store: Store(
           initialState: GameState(),
           reducer: gameReducer,
-          environment: GameEnvironment())
+          environment: .live)
       )
     }
   }
