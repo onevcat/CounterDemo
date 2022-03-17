@@ -8,18 +8,9 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct GameResult: Equatable {
-  let target: Int
-  let guess: Int
-  let timeSpent: TimeInterval
-}
-
 struct GameState: Equatable {
   var counter: Counter = .init()
   var timer: TimerState = .init()
-  
-  var results: [GameResult] = []
-  var lastTimestamp = 0.0
 }
 
 enum GameAction {
