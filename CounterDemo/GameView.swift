@@ -45,7 +45,7 @@ let gameReducer = Reducer<GameState, GameAction, GameEnvironment>.combine(
 struct GameView: View {
   let store: Store<GameState, GameAction>
   var body: some View {
-    WithViewStore(store) { viewStore in
+    WithViewStore(store.stateless) { viewStore in
       VStack {
         TimerLabelView(store: store.scope(state: \.timer, action: GameAction.timer))
         CounterView(store: store.scope(state: \.counter, action: GameAction.counter))
