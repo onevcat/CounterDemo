@@ -12,12 +12,14 @@ import ComposableArchitecture
 struct CounterDemoApp: App {
   var body: some Scene {
     WindowGroup {
-      GameView(
-        store: Store(
-          initialState: GameState(),
-          reducer: gameReducer,
-          environment: .live)
-      )
+      NavigationView {
+        GameView(
+          store: Store(
+            initialState: GameState(),
+            reducer: gameReducer,
+            environment: .live)
+        )
+      }
     }
   }
 }
